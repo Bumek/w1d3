@@ -22,16 +22,21 @@ var salesTaxRates = {
   SK: 0.10
 };
 
-function calculateSalesTax(salesData, taxRates) {
+function SalesTaxCalculator(salesData, taxRates) {
+
+  this.salesData = salesData;
+  this.taxRates = taxRates;
+
+  this.calculate = function() {
 
     var output = {};
     
-    for (var i = 0; i < salesData.length; i++) {
+    for (var i = 0; i < this.salesData.length; i++) {
 
-        var name = salesData[i]["name"];
-        var province = salesData[i]["province"];
-        var sales = salesData[i]["sales"].reduce((a, b) => a + b, 0);
-        var taxAmonut = sales * taxRates[province];
+        var name = this.salesData[i]["name"];
+        var province = this.salesData[i]["province"];
+        var sales = this.salesData[i]["sales"].reduce((a, b) => a + b, 0);
+        var taxAmonut = sales * this.taxRates[province];
 
         if (output[name]) {
             output[name].totalSales += sales;
@@ -40,10 +45,14 @@ function calculateSalesTax(salesData, taxRates) {
             output[name] = {totalSales: sales, totalTaxes: taxAmonut};      
         } 
     }
+
     console.log(output);
+  }
 }
 
-var results = calculateSalesTax(companySalesData, salesTaxRates);
+
+var salesTaxCalc = new SalesTaxCalculator(companySalesData, salesTaxRates);
+var results = salesTaxCalc.calculate();
 
 /* Expected Results:
 {
